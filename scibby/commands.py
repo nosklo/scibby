@@ -22,17 +22,17 @@ def _parse_pagetitle(page_contents, url):
 
     return "%s -- %s" % (url, title)
 
-def command_lolelo(nickname, domain="euw"):
+def command_elo(nickname, domain="euw"):
     print "Getting LoL ELO for %s on %s" % (nickname, domain)
     url = "http://competitive.%s.leagueoflegends.com/ladders/%s/current/rankedsolo5x5?summoner_name=%s" % (domain, domain, nickname)
 
     d = getPage(url)
 
-    d.addCallback(_parse_lolelo, nickname, domain)
+    d.addCallback(_parse_elo, nickname, domain)
 
     return d
     
-def _parse_lolelo(page_contents, nickname, domain):
+def _parse_elo(page_contents, nickname, domain):
     pagetree = lxml.html.fromstring(page_contents)
 
     elo = u" ".join(pagetree.xpath("//td[@class='views-field views-field-rating views-align-center']/text()")).strip()
