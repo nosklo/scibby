@@ -1,0 +1,3 @@
+- Add plugin structure for commands.
+- Create a plugin for adding random commands.
+    - Create web admin interface for random commands plugin.
