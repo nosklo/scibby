@@ -56,10 +56,13 @@ class ScibbyFactory(protocol.ReconnectingClientFactory):
     protocol = ScibbyClient 
     channels = ["#scibbytest"]
 
-if __name__ == "__main__":
+def main():
     reactor.connectTCP(HOST, PORT, ScibbyFactory())
     log.startLogging(sys.stdout)
     reactor.run()
+
+if __name__ == "__main__":
+    main()
 elif __name__ == "__builtin__":
     application = service.Application("scib")
     irc_service = internet.TCPClient(HOST, PORT, ScibbyFactory())
