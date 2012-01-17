@@ -32,7 +32,10 @@ broquotes = ["As soon as we saw the fake boo, we had to get them outta here, bec
              "I'm like yea, we share girls why can't we share underwear?",
              "Baylife!",
              "I got spray tan on my nails and shit.",
-             "We're going to get mini pedis. Vinny - You know, guy stuff"]
+             "We're going to get mini pedis. Vinny - You know, guy stuff",
+             "I am the Angelina Jolie of incredible hot guys",
+             "You cannot spell game without ME!",
+             "Discouraging pre-marital sex is against my religion."]
 
 def command_brolife(rest):
     return "BROLIFE!"
