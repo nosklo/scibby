@@ -4,6 +4,13 @@ from twisted.web.client import getPage
 import lxml.html
 import random
 
+import operator
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 """Commands container, to be replaced with a plugin way of dealing with things
 later on the lifecycle of scibby the irc bot!"""
 
@@ -73,9 +80,33 @@ def _get_help_elo():
     return "Usage: !elo {dota2,lol,sc2} nickname"
 
 # TODO
-def _get_sc2_elo(nickname, domain="eu"):
-    return "Not implemented yet."
+def _get_sc2_elo(arguments, domain="eu"):
+    name, _, character_code = arguments.partition(" ")
 
+    url = "http://sc2ranks.com/api/base/teams/%s/%s$%s.json?appKey=redditeu.sc" % (domain, name, character_code)
+
+    d = getPage(url)
+    d.addCallback(_parse_sc2_elo, name, character_code, domain)
+
+    return d
+
+def _parse_sc2_elo(page_contents, name, character_code, domain):
+    data = json.loads(page_contents)
+
+    if "error" in data or not len(data["teams"]):
+        return "No ELO found"
+
+    teams = data["teams"]
+
+    msg = []
+
+    for team in teams:
+        msg += ["%sv%ss %s %s points" % (team["bracket"], team["bracket"], team["league"], team["points"])] 
+
+    msg = u", ".join(msg).strip()
+    return msg.encode("utf-8")
+
+    
 # TODO
 def _get_dota2_elo(nickname, domain="eu"):
     return "Not implemented yet."
