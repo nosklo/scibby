@@ -132,3 +132,7 @@ def _parse_lol_elo(page_contents, nickname, domain):
         elo = "No ELO found"
 
     return "%s (%s) -- %s." % (nickname, domain, elo) 
+
+### MISC ###
+def command_akali(rest):
+    return "http://i.imgur.com/3e8hp.jpg"
