@@ -2,6 +2,7 @@
 from twisted.web.client import getPage
 
 import lxml.html
+import random
 
 """Commands container, to be replaced with a plugin way of dealing with things
 later on the lifecycle of scibby the irc bot!"""
@@ -18,13 +19,32 @@ def command_title(url):
 def _parse_pagetitle(page_contents, url):
     pagetree = lxml.html.fromstring(page_contents)
 
-    title = u" ".join(pagetree.xpath("//title/text()")).strip()
+    title = u"".join(pagetree.xpath("//title/text()")).strip()
     title = title.encode("utf-8")
 
     if not len(title):
         title = "No title found"
 
     return "%s -- %s." % (url, title)
+
+### BROCODE ###
+broquotes = ["As soon as we saw the fake boo, we had to get them outta here, because this is Grenade Free Zone.",
+             "I'm like yea, we share girls why can't we share underwear?",
+             "Baylife!",
+             "I got spray tan on my nails and shit.",
+             "We're going to get mini pedis. Vinny - You know, guy stuff"]
+
+def command_brolife(rest):
+    return "BROLIFE!"
+
+def command_baylife(rest):
+    return "BAYLIFE BRO!"
+
+def command_bro(rest):
+    return "SUP BRAH?!"
+
+def command_broquote(rest):
+    return random.choice(broquotes)
 
 ### ELO ###
 def command_elo(rest):
@@ -68,7 +88,7 @@ def _get_lol_elo(nickname, domain="euw"):
 def _parse_lol_elo(page_contents, nickname, domain):
     pagetree = lxml.html.fromstring(page_contents)
 
-    elo = u" ".join(pagetree.xpath("//td[@class='views-field views-field-rating views-align-center']/text()")).strip()
+    elo = u" ".join(pagetree.xpath("//td[@class='views-field views-field-rating views-align-center']/text()")[0]).strip()
     elo = elo.encode("utf-8")
 
     if not len(elo):
