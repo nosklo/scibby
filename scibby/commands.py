@@ -7,6 +7,10 @@ import random
 """Commands container, to be replaced with a plugin way of dealing with things
 later on the lifecycle of scibby the irc bot!"""
 
+### Default responses ###
+def say_hi():
+    return "Hi!"
+
 ### URL commands ###
 def command_title(url):
     """Use lxml to parse the <title> tag out of a given URL"""
@@ -86,12 +90,11 @@ def _get_lol_elo(nickname, domain="euw"):
     d.addCallback(_parse_lol_elo, nickname, domain)
 
     return d
- 
    
 def _parse_lol_elo(page_contents, nickname, domain):
     pagetree = lxml.html.fromstring(page_contents)
 
-    elo = u" ".join(pagetree.xpath("//td[@class='views-field views-field-rating views-align-center']/text()")[0]).strip()
+    elo = u"".join(pagetree.xpath("//td[@class='views-field views-field-rating views-align-center']/text()")[0]).strip()
     elo = elo.encode("utf-8")
 
     if not len(elo):

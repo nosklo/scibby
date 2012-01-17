@@ -23,18 +23,22 @@ class ScibbyClient(irc.IRCClient):
 
         message = message.strip()
 
-        if not message.startswith("!"):
+        if not message.startswith("!") and not message.startswith(self.nickname):
             return
 
-        command, sep, rest = message.lstrip("!").partition(" ")
+        if message.startswith("!"):
+            command, sep, rest = message.lstrip("!").partition(" ")
 
-        func = getattr(commands, "command_" + command, None)
+            func = getattr(commands, "command_" + command, None)
 
-        if func is None:
-            return
+            if func is None:
+                return
 
-        d = defer.maybeDeferred(func, rest)
-        # d.addErrback(self._show_error)
+            d = defer.maybeDeferred(func, rest)
+            # d.addErrback(self._show_error)
+
+        if message.startswith(self.nickname):
+            d = defer.maybeDeferred(getattr(commands, "say_hi", None))
 
         if channel == self.nickname:
             d.addCallback(self._send_message, nick)
