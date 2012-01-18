@@ -27,7 +27,7 @@ class ScibbyClient(irc.IRCClient):
 
         message = message.strip()
 
-        if not message.startswith("!") and not message.startswith(self.nickname):
+        if not message.startswith("!"):
             return
 
         if message.startswith("!"):
@@ -36,14 +36,14 @@ class ScibbyClient(irc.IRCClient):
 
             command, sep, rest = message.lstrip("!").partition(" ")
 
-            if command in commands.whitelist:
-                func = getattr(commands, "command_" + command, None)
+            if command in commands.whitelist.keys():
+                func = getattr(commands, command, None)
             else:
                 # the func might be in one of the plugins, delegate to scibby.plugins
                 if command in pnp.plugins:
-                    print pnp.plugins[command]
-                    print dir(pnp.plugins[command])
-	            func = pnp.plugins[command]._handler 
+	            func = pnp.plugins[command]._handler
+                else:
+                    func = None
 
             if func is None:
                 return
