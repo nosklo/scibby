@@ -19,7 +19,7 @@ later on the lifecycle of scibby the irc bot!"""
 
 def plugins(rest):
     # TODO list all enabled plugins found by scibby.plugins
-    return ", ".join(plugins.keys())
+    return ", ".join(pnp.plugins.keys())
 
 def about(rest):
     # TODO more verbose
