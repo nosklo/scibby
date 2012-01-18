@@ -11,12 +11,21 @@ try:
 except ImportError:
     import simplejson as json
 
+whitelist = ["plugins", "about", "usage"]
+
 """Commands container, to be replaced with a plugin way of dealing with things
 later on the lifecycle of scibby the irc bot!"""
 
-### Default responses ###
-def say_hi():
-    return "Hi!"
+def plugins(rest):
+    # TODO list all enabled plugins found by scibby.plugins
+    return "not implemented yet"
+
+def about(rest):
+    # TODO more verbose
+    return "https://github.com/ikanobori/scibby"
+
+def usage(rest):
+    return "!{%s}" % ", ".join(whitelist.keys())
 
 ### URL commands ###
 def command_title(url):
