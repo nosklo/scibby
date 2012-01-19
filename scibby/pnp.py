@@ -4,9 +4,9 @@ import os.path
 
 from twisted.python.modules import iterModules
 
-from scibby.client import configuration
+from scibby.config import values as configuration
 
-sys.path.append(configuration["plugins_directory"])
+sys.path.append(configuration.plugins_directory)
 
 plugins = {}
 
@@ -14,7 +14,7 @@ plugins = {}
 # TODO make the modules be packages and have a file describing them as an actual
 # scibby plugin so not everything in this directory gets imported
 for modinfo in iterModules():
-    if os.path.dirname(modinfo.filePath.path) == configuration["plugins_directory"]:
+    if os.path.dirname(modinfo.filePath.path) == configuration.plugins_directory:
         filename = os.path.basename(modinfo.filePath.path)
         modulename = os.path.splitext(filename)[0]
 

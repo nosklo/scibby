@@ -6,20 +6,15 @@ from twisted.python import log
 from twisted.words.protocols import irc
 from twisted.application import internet, service
 
-configuration = {"host": "irc.quakenet.org",
-                 "port": 6667,
-                 "nickname": "scibby",
-                 "channels": ["#scibbytest"],
-                 "plugins_directory": "/home/simon/dev/src/scibby-plugins"}
-
 from scibby import commands
 from scibby import pnp 
+from scibby.config import values as configuration
 
 class ScibbyClient(irc.IRCClient):
-    nickname = configuration["nickname"]
+    nickname = configuration.nickname
 
     def signedOn(self):
-        for channel in configuration["channels"]:
+        for channel in configuration.channels:
             self.join(channel)
 
     def privmsg(self, user, channel, message):
@@ -71,7 +66,7 @@ class ScibbyFactory(protocol.ReconnectingClientFactory):
     protocol = ScibbyClient 
 
 def main():
-    reactor.connectTCP(configuration["host"], configuration["port"], ScibbyFactory())
+    reactor.connectTCP(configuration.host, configuration.port, ScibbyFactory())
     log.startLogging(sys.stdout)
     reactor.run()
 
@@ -79,5 +74,5 @@ if __name__ == "__main__":
     main()
 elif __name__ == "__builtin__":
     application = service.Application("scib")
-    irc_service = internet.TCPClient(configuration["host"], configuration["port"], ScibbyFactory())
+    irc_service = internet.TCPClient(configuration.host, configuration.port, ScibbyFactory())
     irc_service.setServiceParent(application)
