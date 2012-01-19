@@ -6,6 +6,8 @@ from twisted.python.modules import iterModules
 
 from scibby.config import values as configuration
 
+configuration.plugins_directory = os.path.expanduser(configuration.plugins_directory)
+
 sys.path.append(configuration.plugins_directory)
 
 plugins = {}

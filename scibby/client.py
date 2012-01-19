@@ -10,6 +10,14 @@ from scibby import commands
 from scibby import pnp 
 from scibby.config import values as configuration
 
+hooks = []
+
+for plugin_name, plugin in pnp.plugins.iteritems():
+    plugin_hooks = getattr(plugin, "hooks", None)
+
+    if plugin_hooks:
+       hooks.extend((key, value) for key, value in plugin_hooks.iteritems())
+
 class ScibbyClient(irc.IRCClient):
     nickname = configuration.nickname
 
@@ -18,12 +26,10 @@ class ScibbyClient(irc.IRCClient):
             self.join(channel)
 
     def privmsg(self, user, channel, message):
+        found_response = False
         nick, _, host = user.partition("!")
 
         message = message.strip()
-
-        if not message.startswith("!"):
-            return
 
         if message.startswith("!"):
             """We received a command. This is either in the default scibby 
@@ -32,19 +38,26 @@ class ScibbyClient(irc.IRCClient):
             command, sep, rest = message.lstrip("!").partition(" ")
 
             if command in commands.whitelist.keys():
+                found_response = True
                 func = getattr(commands, command, None)
             else:
                 # the func might be in one of the plugins, delegate to scibby.plugins
                 if command in pnp.plugins:
+                    found_response = True
 	            func = pnp.plugins[command]._handler
                 else:
                     func = None
 
-            if func is None:
-                return
+            if found_response:
+                d = defer.maybeDeferred(func, rest)
 
-            d = defer.maybeDeferred(func, rest)
-            # d.addErrback(self._show_error)
+        for hook in hooks:
+            if hook[0].match(message):
+                found_response = True
+                d = defer.maybeDeferred(hook[1], message)
+
+        if not found_response:
+            return
 
         if channel == self.nickname:
             d.addCallback(self._send_message, nick)
