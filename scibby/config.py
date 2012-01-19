@@ -37,15 +37,16 @@ def loadini(struct, configfile):
             "port": 6667,
             "channels": "#scibbytest",
             "nickname": "scabby",
-            "plugins_directory": "~/.scibby/plugins"
+            "plugins_directory": "~/dev/src/scibby-plugins"
         }})
 
-    if not config.read(config_path):
-        struct.host = config.get("general", "host")
-        struct.port = config.getint("general", "port")
-        struct.channels = config.get("general", "channels").split(",")
-        struct.nickname = config.get("general", "nickname")
-        struct.plugins_directory = config.get("general", "plugins_directory")
+    config.read(config_path)
+
+    struct.host = config.get("general", "host")
+    struct.port = config.getint("general", "port")
+    struct.channels = config.get("general", "channels").split(",")
+    struct.nickname = config.get("general", "nickname")
+    struct.plugins_directory = config.get("general", "plugins_directory")
 
     return struct
 

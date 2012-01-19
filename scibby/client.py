@@ -12,6 +12,8 @@ from scibby.config import values as configuration
 
 hooks = []
 
+# initalize all plugin hooks, these are regular expressions
+# defined in the modules loaded by pnp.plugins
 for plugin_name, plugin in pnp.plugins.iteritems():
     plugin_hooks = getattr(plugin, "hooks", None)
 
@@ -44,13 +46,17 @@ class ScibbyClient(irc.IRCClient):
                 # the func might be in one of the plugins, delegate to scibby.plugins
                 if command in pnp.plugins:
                     found_response = True
-	            func = pnp.plugins[command]._handler
+                    func = pnp.plugins[command]._handler
                 else:
                     func = None
 
             if found_response:
                 d = defer.maybeDeferred(func, rest)
 
+        # check if the line received matches any of the hooks registered
+        # by the modules loaded by pnp.plugins
+
+        # if a hook is found it receives the full message
         for hook in hooks:
             if hook[0].match(message):
                 found_response = True
@@ -65,6 +71,7 @@ class ScibbyClient(irc.IRCClient):
             d.addCallback(self._send_message, channel, nick)
 
     def _send_message(self, msg, target, nick=None):
+        """Send a message to a given target (channel or nickname)."""
         if nick:
             msg = "%s, %s" % (nick, msg)
         self.msg(target, msg)
