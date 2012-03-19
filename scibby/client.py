@@ -34,8 +34,8 @@ class ScibbyClient(irc.IRCClient):
         message = message.strip()
 
         if message.startswith("!"):
-            """We received a command. This is either in the default scibby 
-            commands or in one of the plugins."""
+            # We received a command. This is either in the default scibby 
+            # commands or in one of the plugins.
 
             command, sep, rest = message.lstrip("!").partition(" ")
 
